@@ -115,7 +115,6 @@ static void _InitController(void) {
     *  this needs to be adapted by the customer.
     */
 
-    ST7789V_Init();
     
 }
 

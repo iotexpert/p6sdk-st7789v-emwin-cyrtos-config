@@ -4,42 +4,40 @@
 
 void ST7789V_InitConfig();
 
-#if 0
-static DigitalOut TFTRD(MBED_CONF_ST7789V_TFT_TFTRD);
-static DigitalOut TFTWR(MBED_CONF_ST7789V_TFT_TFTWR);
-static DigitalOut TFTDC(MBED_CONF_ST7789V_TFT_TFTDC);
-static DigitalOut TFTRST(MBED_CONF_ST7789V_TFT_TFTRST);
+static cyhal_gpio_t TFT_RD;
+static cyhal_gpio_t TFT_WR;
+static cyhal_gpio_t TFT_DC;
+static cyhal_gpio_t TFT_RST;
 
-static BusOut lcdBus(MBED_CONF_ST7789V_TFT_DB8,
-                        MBED_CONF_ST7789V_TFT_DB9,
-                        MBED_CONF_ST7789V_TFT_DB10,
-                        MBED_CONF_ST7789V_TFT_DB11,
-                        MBED_CONF_ST7789V_TFT_DB12,
-                        MBED_CONF_ST7789V_TFT_DB13,
-                        MBED_CONF_ST7789V_TFT_DB14,
-                        MBED_CONF_ST7789V_TFT_DB15);
+static cyhal_gpio_t TFT_DB8;
+static cyhal_gpio_t TFT_DB9;
+static cyhal_gpio_t TFT_DB10;
+static cyhal_gpio_t TFT_DB11;
+static cyhal_gpio_t TFT_DB12;
+static cyhal_gpio_t TFT_DB13;
+static cyhal_gpio_t TFT_DB14;
+static cyhal_gpio_t TFT_DB15;
 
-// TFTRD
-// TFTWR
-#endif
+// This function configures attaches this driver to the actual hardware pins on the ST7789V
 
-cyhal_gpio_t TFT_RD  = CYBSP_D10;
-cyhal_gpio_t TFT_WR  = CYBSP_D11;
-cyhal_gpio_t TFT_DC  = CYBSP_D12;
-cyhal_gpio_t TFT_RST = CYBSP_D13;
-
-cyhal_gpio_t TFT_DB8  = P9_0;
-cyhal_gpio_t TFT_DB9  = P9_1;
-cyhal_gpio_t TFT_DB10 = P9_2;
-cyhal_gpio_t TFT_DB11 = P9_4;
-cyhal_gpio_t TFT_DB12 = P9_5;
-cyhal_gpio_t TFT_DB13 = CYBSP_D7;
-cyhal_gpio_t TFT_DB14 = CYBSP_D8;
-cyhal_gpio_t TFT_DB15 = CYBSP_D9;
-
-
-void ST7789V_Init()
+void ST7789V_Init(cyhal_gpio_t RD,cyhal_gpio_t WR,cyhal_gpio_t DC,cyhal_gpio_t RST,
+                cyhal_gpio_t DB8, cyhal_gpio_t DB9, cyhal_gpio_t DB10, cyhal_gpio_t DB11,
+                cyhal_gpio_t DB12, cyhal_gpio_t DB13, cyhal_gpio_t DB14, cyhal_gpio_t DB15
+                )
 {
+    TFT_RD  = RD;
+    TFT_WR  = WR;
+    TFT_DC  = DC;
+    TFT_RST = RST;
+    TFT_DB8  = DB8;
+    TFT_DB9  = DB9;
+    TFT_DB10 = DB10;
+    TFT_DB11 = DB11;
+    TFT_DB12 = DB12;
+    TFT_DB13 = DB13;
+    TFT_DB14 = DB14;
+    TFT_DB15 = DB15;
+
     cyhal_gpio_init(TFT_RD ,CYHAL_GPIO_DIR_OUTPUT,CYHAL_GPIO_DRIVE_STRONG,0);
     cyhal_gpio_init(TFT_WR ,CYHAL_GPIO_DIR_OUTPUT,CYHAL_GPIO_DRIVE_STRONG,0);
     cyhal_gpio_init(TFT_DC ,CYHAL_GPIO_DIR_OUTPUT,CYHAL_GPIO_DRIVE_STRONG,0);
@@ -58,7 +56,19 @@ void ST7789V_Init()
 
 }
 
+// If the BSP pins are defined that are connected to the CY8CKIT-028-TFT sheild then provide the function
+// that initializes those pins.
 
+#if defined(CYBSP_D10) &defined(CYBSP_D11) & defined(CYBSP_D12) & defined(CYBSP_D13) & defined(CYBSP_J2_2) & \
+    defined(CYBSP_J2_4) & defined(CYBSP_J2_6) & defined(CYBSP_J2_10) & defined(CYBSP_J2_12) & defined(CYBSP_D7) & \
+    defined(CYBSP_D8) & defined(CYBSP_D9)
+void ST7789V_InitBSP()
+{
+    ST7789V_Init(CYBSP_D10,CYBSP_D11,CYBSP_D12,CYBSP_D13,CYBSP_J2_2,CYBSP_J2_4,CYBSP_J2_6,CYBSP_J2_10,CYBSP_J2_12,CYBSP_D7,CYBSP_D8,CYBSP_D9);
+}
+#endif
+
+// Bit Bang the ST7789V bus
 void ST7789V_CTRL_Write(unsigned char data)
 {
     cyhal_gpio_write(TFT_DB8  ,(data>>0) & 0x01);
@@ -73,61 +83,35 @@ void ST7789V_CTRL_Write(unsigned char data)
 
 void ST7789V_writeCommand(unsigned char command)
 {
-//    TFTDC = 0;
     cyhal_gpio_write(TFT_DC,0);
-
     ST7789V_CTRL_Write(command);
-        
- //   TFTWR = 0;
-        cyhal_gpio_write(TFT_WR,0);
-
- //   TFTWR = 1;
-        cyhal_gpio_write(TFT_WR,1);
-
+    cyhal_gpio_write(TFT_WR,0);
+    cyhal_gpio_write(TFT_WR,1);
 }
 
 void ST7789V_writeData(unsigned char data)
 {
-  //  TFTDC = 1;
-        cyhal_gpio_write(TFT_DC,1);
-
-
+    cyhal_gpio_write(TFT_DC,1);
     ST7789V_CTRL_Write(data);
-
-//    TFTWR = 0;
-        cyhal_gpio_write(TFT_WR,0);
-
- //   TFTWR = 1;
-        cyhal_gpio_write(TFT_WR,1);
-
+    cyhal_gpio_write(TFT_WR,0);
+    cyhal_gpio_write(TFT_WR,1);
 }
 
 void ST7789V_InitConfig(void)
 {
-
- //   TFTDC = 0;
-        cyhal_gpio_write(TFT_DC,0);
-
-//    TFTRD = 1;
+    cyhal_gpio_write(TFT_DC,0);
         cyhal_gpio_write(TFT_RD,1);
-
-//    TFTWR = 0;
         cyhal_gpio_write(TFT_WR,0);
-
-
-//    TFTRST = 0; // reset the chip[]
         cyhal_gpio_write(TFT_RST,0);
 
     GUI_X_Delay(100);
-//    TFTRST = 1; // take it out of reset
-        cyhal_gpio_write(TFT_RST,1);
+    cyhal_gpio_write(TFT_RST,1);
 
     GUI_X_Delay(100);
 
     ST7789V_writeCommand(0x11);    /* exit SLEEP mode*/
 
     GUI_X_Delay(300);
-  
 
     ST7789V_writeCommand(0x36);
     ST7789V_writeData(0xA0);      /* MADCTL: memory data access control*/
