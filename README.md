@@ -44,7 +44,7 @@ make getlibs
 ```
 # Adding this Driver to your project with the Library Manager
 If you are using the IoT Expert manifest this will show up in the library manager under the IoT Expert middleware.
-![Exmaple Code Results](https://raw.githubusercontent.com/iotexpert/p6sdk-st7789v-emwin-cyrtos-config/master/libraryManager.png)
+![Exmaple Code Results](https://raw.githubusercontent.com/iotexpert/p6sdk-st7789v-emwin-rtos-config/master/libraryManager.png)
 
 ## Example Code
 This code will initailize the BSP, then display "Hello World" in the middle.
@@ -89,4 +89,4 @@ int main(void)
 
 ```
 
-![Exmaple Code Results](https://raw.githubusercontent.com/iotexpert/p6sdk-st7789v-emwin-cyrtos-config/master/st7789v.jpg)
+![Exmaple Code Results](https://raw.githubusercontent.com/iotexpert/p6sdk-st7789v-emwin-rtos-config/master/st7789v.jpg)
