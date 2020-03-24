@@ -1,5 +1,5 @@
 # ST7789V - emWin - PSoC 6 SDK Configuration Files
-This repository contains all of the emWin configuration files plus driver setup for the ST7789V (driver chip) connected the TFT display on the Cypress CY8CKIT-028-TFT.  These configiuration files will generically support displays with the ST7789V
+This repository contains all of the emWin configuration files plus driver setup for the ST7789V (driver chip) connected the TFT display on the Cypress CY8CKIT-028-TFT.  These configuration files will generically support displays with the ST7789V
 
 This driver configures emWin to use the Cypress RTOS Abstraction Layer (e.g. for Delays).  By using the Cypress RTOS Abstraction Layer this driver is compatible with your choice of RTOS.
 
