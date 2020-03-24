@@ -39,7 +39,7 @@ COMPONENTS=EMWIN_OSNTS FREERTOS
 # Adding this Driver to your project manually
 You can add this driver to your project by:
 ```
-echo "https://github.com/iotexpert/p6sdk-st7789v-emwin-cyrtos-config/#master" > p6sdk-st7789v-emwin-rtos-config.lib
+echo "https://github.com/iotexpert/p6sdk-st7789v-emwin-cyrtos-config/#master" > p6sdk-st7789v-emwin-cyrtos-config.lib
 make getlibs
 ```
 # Adding this Driver to your project with the Library Manager
