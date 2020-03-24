@@ -43,10 +43,8 @@ Purpose     : Config / System dependent externals for GUI
 */
 
 #include <stdio.h>
-#include "FreeRTOS.h"
-#include "semphr.h"
-#include "task.h"
 #include "GUI.h"
+#include "cyabs_rtos.h"
 
 /*********************************************************************
 *
@@ -54,7 +52,7 @@ Purpose     : Config / System dependent externals for GUI
 *
 **********************************************************************
 */
-static SemaphoreHandle_t _Semaphore;
+static cy_mutex_t screenMutex;
 
 /*********************************************************************
 *
@@ -78,7 +76,7 @@ int GUI_X_GetTime(void) {
 }
 
 void GUI_X_Delay(int Period) {
-  vTaskDelay(Period / portTICK_PERIOD_MS);
+  cy_rtos_delay_milliseconds (Period);
 }
 
 /*********************************************************************
@@ -87,7 +85,7 @@ void GUI_X_Delay(int Period) {
 *
 */
 void GUI_X_ExecIdle(void) {
-  vTaskDelay(1 / portTICK_PERIOD_MS);
+  cy_rtos_delay_milliseconds (1);
 }
 
 /*********************************************************************
@@ -107,10 +105,27 @@ void GUI_X_ExecIdle(void) {
 *                       #define GUI_OS 1
 *  needs to be in GUIConf.h
 */
-void GUI_X_InitOS(void)    { _Semaphore = xSemaphoreCreateMutex(); }
-void GUI_X_Unlock(void)    { xSemaphoreGive(_Semaphore); }
-void GUI_X_Lock(void)      { xSemaphoreTake(_Semaphore, portMAX_DELAY);  }
-U32  GUI_X_GetTaskId(void) { return (U32)xTaskGetCurrentTaskHandle(); }
+void GUI_X_InitOS(void)
+{ 
+  cy_rslt_t rslt = cy_rtos_init_mutex(&screenMutex);
+  CY_ASSERT(rslt == CY_RSLT_SUCCESS); 
+}
+
+void GUI_X_Unlock(void)
+{ 
+  cy_rslt_t rslt = cy_rtos_set_mutex(&screenMutex); 
+  CY_ASSERT(rslt == CY_RSLT_SUCCESS);
+}
+
+void GUI_X_Lock(void)
+{ 
+  cy_rslt_t rslt = cy_rtos_get_mutex(&screenMutex,CY_RTOS_NEVER_TIMEOUT);
+  CY_ASSERT(rslt == CY_RSLT_SUCCESS);
+}
+
+// This sucks... ARH you really need a task handle in the cypress rtos abstration
+U32  GUI_X_GetTaskId(void) { return 1; }
+
 
 /*********************************************************************
 *
