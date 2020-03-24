@@ -124,7 +124,12 @@ void GUI_X_Lock(void)
 }
 
 // This sucks... ARH you really need a task handle in the cypress rtos abstration
-U32  GUI_X_GetTaskId(void) { return 1; }
+U32  GUI_X_GetTaskId(void) 
+{
+  cy_thread_t thisThread; 
+  cy_rtos_get_thread_handle(&thisThread);
+  return (U32)thisThread; 
+}
 
 
 /*********************************************************************
