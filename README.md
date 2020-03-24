@@ -40,7 +40,7 @@ COMPONENTS=EMWIN_OSNTS
 You can add this driver plus emWin to your project by:
 ```
 echo "https://github.com/cypresssemiconductorco/emwin/#release-v5.48.1" > emwin.lib
-echo "https://github.com/iotexpert/p6sdk-st7789v-emWin-config/#master" > p6sdk-ssd1306-emWin-config.lib
+echo "https://github.com/iotexpert/p6sdk-st7789v-emwin-rtos-config/#master" > p6sdk-st7789v-emwin-rtos-config.lib
 make getlibs
 ```
 # Adding this Driver to your project with the Library Manager
