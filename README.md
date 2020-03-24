@@ -30,16 +30,15 @@ void ST7789V_InitBSP()
 #endif
 ```
 
-These files depend on emWin being part of your project.  You must add them either manually or by using the library manager.  Do not forget that in order to use the emWin library you need to add the correct component to your makefile.  Also you need to add the RTOS for the Abstraction layer to use
+These files depend on emWin and your choice of RTOS being part of your project.  You must add them manually to your Makefile on the COMPONENTS variable.
 ```
 COMPONENTS=EMWIN_OSNTS FREERTOS
 ```
 
 
 # Adding this Driver to your project manually
-You can add this driver plus emWin to your project by:
+You can add this driver to your project by:
 ```
-echo "https://github.com/cypresssemiconductorco/emwin/#release-v5.48.1" > emwin.lib
 echo "https://github.com/iotexpert/p6sdk-st7789v-emwin-rtos-config/#master" > p6sdk-st7789v-emwin-rtos-config.lib
 make getlibs
 ```
